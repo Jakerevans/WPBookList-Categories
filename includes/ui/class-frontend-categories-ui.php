@@ -78,10 +78,25 @@ class WPBookList_Category_UI {
 		// Creating a unique list of categories
 		$temp_category_array = array();
 		foreach($this->books_array as $key=>$book){
-			if($book->category == null){
-				$book->category = 'Uncategorized';
+
+			if($book->genres == null){
+				array_push($temp_category_array, 'Uncategorized');
+			} else {
+
+				if ( false !== stripos( $book->genres, '---' ) ) {
+					$temp = explode( '---', $book->genres );
+
+					foreach ( $temp as $key => $value ) {
+						array_push($temp_category_array, $value);
+					}
+				} else {
+					array_push($temp_category_array, $value);
+				}
+
 			}
-			array_push($temp_category_array, $book->category);
+			
+
+			
 		}
 
 		
@@ -99,7 +114,8 @@ class WPBookList_Category_UI {
 			$string = $string.'<div class="wpbooklist-categories-indiv-container" id="wpbooklist-categories-'.$forid.'"><div class="wpbooklist-categories-indiv-inner-container"><div class="wpbooklist-categories-title-holder"><img class="wpbooklist-categories-book-img" src="'.CATEGORIES_ROOT_IMG_URL.'books.svg"/>  '.$value.'<img class="wpbooklist-categories-carrot-img" src="'.CATEGORIES_ROOT_IMG_URL.'repeat.svg"/></div></div><div class="wpbooklist-categories-book-holder">';
 
 			foreach ($this->books_array as $key => $book) {
-				if($book->category == $value){
+
+				if( false !== stripos( $book->genres, $value ) || 'Uncategorized' === $value ){
 					$string = $string.'<div class="wpbooklist_category_entry_div">
 		                <p style="display:none;" id="wpbooklist-hidden-isbn1">'.$book->isbn.'</p>
 		                <div class="wpbooklist_category_inner_main_display_div">
